@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <title>Admin - Contestants</title>
+
+  <style>
+
+    body {
+
+      font-family: sans-serif;
+
+      background: #fff;
+
+      padding: 20px;
+
+    }
+
+    h2 {
+
+      color: #333;
+
+    }
+
+    table {
+
+      width: 100%;
+
+      border-collapse: collapse;
+
+      margin-top: 20px;
+
+    }
+
+    th, td {
+
+      padding: 10px;
+
+      border: 1px solid #ccc;
+
+    }
+
+    #protected {
+
+      display: none;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <h2>Admin Area</h2>
+
+  <div id="protected">
+
+    <table>
+
+      <thead>
+
+        <tr><th>Name</th><th>Phone</th><th>Email</th></tr>
+
+      </thead>
+
+      <tbody id="contestant-table"></tbody>
+
+    </table>
+
+  </div>
+
+
+
+  <script>
+
+    const pwd = prompt("Enter Admin Password:");
+
+    if (pwd === "187") {
+
+      document.getElementById('protected').style.display = 'block';
+
+      const tbody = document.getElementById('contestant-table');
+
+      const contestants = JSON.parse(localStorage.getItem('raffleContestants') || '[]');
+
+
+
+      contestants.forEach(c => {
+
+        const row = `<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.email}</td></tr>`;
+
+        tbody.innerHTML += row;
+
+      });
+
+    } else {
+
+      document.body.innerHTML = "<h3>Access Denied</h3>";
+
+    }
+
+  </script>
+
+</body>
+
+</html>
