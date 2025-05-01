@@ -13,18 +13,21 @@
   <button onclick="submitForm()">Join</button>
 
   <script>
-    function submitForm() {
-      const name = document.getElementById("name").value.trim();
-      const email = document.getElementById("email").value.trim().toLowerCase();
+  function submitForm() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
 
-      if (!name || !email) {
-        alert("Fill in all fields");
-        return;
-      }
-
-      db.ref("contestants").push({ name, email });
-      alert("Registered! Go to spin page to watch.");
+    if (!name || !email) {
+      alert("Fill in all fields");
+      return;
     }
-  </script>
+
+    db.ref("contestants").push({ name, email })
+      .then(() => {
+        localStorage.setItem("joinedName", name); // store name temporarily
+        window.location.href = "spin.html";
+      });
+  }
+</script>
 </body>
 </html>
