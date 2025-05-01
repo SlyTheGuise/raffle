@@ -1,98 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Raffle Sign-Up</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #eef2f7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-    }
-    .form-container {
-      background: #fff;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      max-width: 400px;
-      width: 100%;
-    }
-    h2 {
-      text-align: center;
-      color: #333;
-    }
-    input, button {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
-    button {
-      background: #28a745;
-      color: white;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #218838;
-    }
-    .error { color: red; font-size: 0.9rem; }
-  </style>
+  <title>Raffle Signup</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="firebase.js"></script>
 </head>
 <body>
-  <div class="form-container">
-    <h2>Enter the Raffle</h2>
-    <form id="signup-form">
-      <input type="text" id="name" placeholder="Your Name" required />
-      <input type="tel" id="phone" placeholder="Phone Number" required />
-      <input type="email" id="email" placeholder="Email Address" required />
-      <div class="error" id="error-msg"></div>
-      <button type="submit">Join & Go to Spin</button>
-    </form>
-  </div>
+  <h2>Enter the Raffle</h2>
+  <input id="name" placeholder="Name"><br>
+  <input id="email" placeholder="Email"><br>
+  <button onclick="submitForm()">Join</button>
 
   <script>
-    const form = document.getElementById('signup-form');
-    const errorMsg = document.getElementById('error-msg');
+    function submitForm() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim().toLowerCase();
 
-    const forbiddenWords = ['ass','bitch','fuck','shit','cunt','bastard','slut','whore'];
-
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-
-      const name = document.getElementById('name').value.trim();
-      const phone = document.getElementById('phone').value.trim();
-      const email = document.getElementById('email').value.trim().toLowerCase();
-
-      if (!name || !phone || !email) {
-        errorMsg.textContent = 'Please fill out all fields.';
+      if (!name || !email) {
+        alert("Fill in all fields");
         return;
       }
 
-      if (forbiddenWords.some(word => name.toLowerCase().includes(word))) {
-        errorMsg.textContent = 'Inappropriate language is not allowed.';
-        return;
-      }
-
-      let contestants = JSON.parse(localStorage.getItem('raffleContestants') || '[]');
-
-      if (contestants.some(c => c.email === email || c.phone === phone)) {
-        errorMsg.textContent = 'You have already signed up.';
-        return;
-      }
-
-      contestants.push({ name, phone, email });
-      localStorage.setItem('raffleContestants', JSON.stringify(contestants));
-
-      window.location.href = 'spin.html';
-    });
+      db.ref("contestants").push({ name, email });
+      alert("Registered! Go to spin page to watch.");
+    }
   </script>
 </body>
 </html>
