@@ -16,34 +16,22 @@
   <div id="wheel"></div>
   <div class="winner" id="winner"></div>
 
-  <script>
-    function renderWheel(contestants) {
-      const wheel = document.getElementById('wheel');
-      wheel.innerHTML = '';
-      contestants.forEach((c, i) => {
-        const seg = document.createElement('div');
-        seg.innerText = c.name;
-        seg.style.background = ['#f33','#3f3','#33f'][i % 3];
-        seg.style.padding = '10px';
-        seg.style.margin = '5px';
-        wheel.appendChild(seg);
-      });
+ <script>
+  function submitForm() {
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim().toLowerCase();
+
+    if (!name || !email) {
+      alert("Fill in all fields");
+      return;
     }
 
-    db.ref("contestants").on("value", snapshot => {
-      const data = snapshot.val();
-      if (!data) return;
-      const entries = Object.values(data);
-      renderWheel(entries);
-    });
-
-    db.ref("winner").on("value", snap => {
-      const val = snap.val();
-      if (val) {
-        document.getElementById("winner").innerText = `🎉 Winner: ${val.name} 🎉`;
-        alert(`🎉 ${val.name} has won the raffle!`);
-      }
-    });
-  </script>
+    db.ref("contestants").push({ name, email })
+      .then(() => {
+        localStorage.setItem("joinedName", name); // store name temporarily
+        window.location.href = "spin.html";
+      });
+  }
+</script>
 </body>
 </html>
