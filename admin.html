@@ -1,111 +1,30 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
+<html>
 <head>
-
-  <meta charset="UTF-8" />
-
-  <title>Admin - Contestants</title>
-
-  <style>
-
-    body {
-
-      font-family: sans-serif;
-
-      background: #fff;
-
-      padding: 20px;
-
-    }
-
-    h2 {
-
-      color: #333;
-
-    }
-
-    table {
-
-      width: 100%;
-
-      border-collapse: collapse;
-
-      margin-top: 20px;
-
-    }
-
-    th, td {
-
-      padding: 10px;
-
-      border: 1px solid #ccc;
-
-    }
-
-    #protected {
-
-      display: none;
-
-    }
-
-  </style>
-
+  <title>Admin Spin</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+  <script src="firebase.js"></script>
 </head>
-
 <body>
-
-  <h2>Admin Area</h2>
-
-  <div id="protected">
-
-    <table>
-
-      <thead>
-
-        <tr><th>Name</th><th>Phone</th><th>Email</th></tr>
-
-      </thead>
-
-      <tbody id="contestant-table"></tbody>
-
-    </table>
-
-  </div>
-
-
+  <h2>Admin Panel</h2>
+  <button onclick="spin()">Spin the Wheel</button>
+  <div id="status"></div>
 
   <script>
-
-    const pwd = prompt("Enter Admin Password:");
-
-    if (pwd === "187") {
-
-      document.getElementById('protected').style.display = 'block';
-
-      const tbody = document.getElementById('contestant-table');
-
-      const contestants = JSON.parse(localStorage.getItem('raffleContestants') || '[]');
-
-
-
-      contestants.forEach(c => {
-
-        const row = `<tr><td>${c.name}</td><td>${c.phone}</td><td>${c.email}</td></tr>`;
-
-        tbody.innerHTML += row;
-
+    function spin() {
+      db.ref("contestants").once("value", snapshot => {
+        const data = snapshot.val();
+        const entries = Object.values(data);
+        if (entries.length < 2) {
+          alert("Need at least 2 contestants.");
+          return;
+        }
+        const winner = entries[Math.floor(Math.random() * entries.length)];
+        db.ref("winner").set(winner);
+        document.getElementById("status").innerText = `Winner: ${winner.name}`;
       });
-
-    } else {
-
-      document.body.innerHTML = "<h3>Access Denied</h3>";
-
     }
-
   </script>
-
 </body>
-
 </html>
