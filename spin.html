@@ -17,20 +17,10 @@
   <div class="winner" id="winner"></div>
 
  <script>
-  function submitForm() {
-    const name = document.getElementById("name").value.trim();
-    const email = document.getElementById("email").value.trim().toLowerCase();
-
-    if (!name || !email) {
-      alert("Fill in all fields");
-      return;
-    }
-
-    db.ref("contestants").push({ name, email })
-      .then(() => {
-        localStorage.setItem("joinedName", name); // store name temporarily
-        window.location.href = "spin.html";
-      });
+  const joined = localStorage.getItem("joinedName");
+  if (joined) {
+    alert(`🎉 Congratulations ${joined}! You've been entered into the draw.`);
+    localStorage.removeItem("joinedName");
   }
 </script>
 </body>
